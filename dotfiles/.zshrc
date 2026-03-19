@@ -14,6 +14,10 @@ alias gp='git push'
 alias gc='git commit -v'
 # Pull from all repos under current directory:
 alias gitall='find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$PWD/{} pull origin master \;'
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+
+# Claude CLI
+export PATH="$HOME/.local/bin:$PATH"
 
 # Git branch in prompt
 parse_git_branch() {
