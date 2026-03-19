@@ -44,5 +44,11 @@ bash "$(dirname "$0")/symlink.sh"
 echo "Applying macOS preferences..."
 bash "$(dirname "$0")/macos-prefs.sh"
 
+# =============================================================================
+# Default shell
+# =============================================================================
+echo "Setting zsh as default shell..."
+chsh -s /bin/zsh
+
 echo ""
 echo "All done! Restart your Mac to make sure everything takes effect."

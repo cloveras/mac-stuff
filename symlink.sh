@@ -16,8 +16,7 @@ link() {
 }
 
 echo "Symlinking dotfiles..."
-link .bash_profile
-link .bashrc
+link .zshrc
 
 echo "Copying SSH public key..."
 mkdir -p ~/.ssh
