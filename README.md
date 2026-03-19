@@ -18,20 +18,26 @@ macOS setup for a new machine.
 
 ## Setup on a new Mac
 
-**1. Clone this repo**
+**1. Install Xcode Command Line Tools** (includes git)
+```bash
+xcode-select --install
+```
+Wait for the installation to complete before continuing.
+
+**2. Clone this repo**
 ```bash
 git clone https://github.com/cloveras/mac-stuff.git ~/mac-stuff
 cd ~/mac-stuff
 ```
 
-**2. Add your private SSH key**
+**3. Add your private SSH key**
 
 Copy `id_rsa` from your old machine or 1Password to `~/.ssh/id_rsa`, then:
 ```bash
 chmod 600 ~/.ssh/id_rsa
 ```
 
-**3. Run the install script**
+**4. Run the install script**
 ```bash
 bash install.sh
 ```
@@ -45,11 +51,11 @@ This will:
 - Copy the public SSH key to `~/.ssh/`
 - Apply macOS system preferences
 
-**4. Import iTerm2 settings**
+**5. Import iTerm2 settings**
 
 Open iTerm2, then go to **General → Preferences → Load preferences from a custom folder or URL**, point it at this repo, or use **File → Import AI Config / Restore State** and select `iTerm2 State.itermexport`.
 
-**5. Restart**
+**6. Restart**
 
 Some preferences (trackpad, UI) require a restart to fully apply.
 
