@@ -1,5 +1,3 @@
-tap "openhue/cli"
-tap "steipete/tap"
 tap "teamookla/speedtest"
 tap "yakitrak/yakitrak"
 
