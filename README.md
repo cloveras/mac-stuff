@@ -11,6 +11,7 @@ macOS setup for a new machine.
 | `dotfiles/` | `.bash_profile` and `.bashrc`, symlinked into `~/` |
 | `ssh/id_rsa.pub` | Public SSH key (private key must be added manually) |
 | `macos-prefs.sh` | Key system preferences via `defaults write` |
+| `clone-repos.sh` | Creates `~/Dev` and clones all repos |
 | `symlink.sh` | Symlinks dotfiles into `~/` |
 | `install.sh` | Runs everything in order |
 
@@ -38,6 +39,7 @@ This will:
 - Install Homebrew (if not already installed)
 - Install all brew packages, casks, and App Store apps from `Brewfile`
 - Install global npm packages
+- Create `~/Dev` and clone all repos
 - Symlink dotfiles (`.bash_profile`, `.bashrc`) into `~/`
 - Copy the public SSH key to `~/.ssh/`
 - Apply macOS system preferences
