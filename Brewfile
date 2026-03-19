@@ -4,97 +4,61 @@ tap "teamookla/speedtest"
 tap "yakitrak/yakitrak"
 
 # --- CLI tools ---
-brew "aria2"
-brew "bash"
-brew "curl"
-brew "czkawka"
-brew "docker"
-brew "emacs"
-brew "evernote-backup"
-brew "exiftool"
-brew "freetds"
-brew "gemini-cli"
-brew "gh"
-brew "git-filter-repo"
-brew "glances"
-brew "go"
-brew "handbrake"
-brew "htop"
-brew "httpie"
-brew "libdvdcss"
-brew "libmagic"
-brew "libpq"
-brew "libzip"
-brew "mas"
-brew "ncftp"
-brew "nmap"
-brew "node"
-brew "php"
-brew "pipx"
-brew "poppler"
-brew "python@3.13"
-brew "python@3.14"
-brew "rsync"
-brew "testdisk"
-brew "tree"
-brew "wget"
-brew "xorriso"
-brew "zstd"
-brew "openhue/cli/openhue-cli"
-brew "steipete/tap/gogcli"
-brew "steipete/tap/goplaces"
-brew "steipete/tap/imsg"
-brew "steipete/tap/peekaboo"
-brew "steipete/tap/songsee"
-brew "steipete/tap/summarize"
-brew "teamookla/speedtest/speedtest"
-brew "yakitrak/yakitrak/obsidian-cli"
+brew "bash"                                    # Newer Bash (macOS ships an old version)
+brew "curl"                                    # HTTP transfer tool
+brew "docker"                                  # Container platform CLI
+brew "emacs"                                   # Text editor
+brew "exiftool"                                # Read/edit metadata in photos and files
+brew "gemini-cli"                              # Google Gemini AI in the terminal
+brew "gh"                                      # GitHub CLI — repos, PRs, issues
+brew "git-filter-repo"                         # Rewrite git history
+brew "glances"                                 # System monitor (CPU, memory, network)
+brew "htop"                                    # Interactive process monitor
+brew "httpie"                                  # Friendly HTTP client CLI
+brew "libmagic"                                # File type detection library
+brew "libzip"                                  # Zip file library
+brew "mas"                                     # Mac App Store CLI (used by this Brewfile)
+brew "node"                                    # Node.js runtime
+brew "php"                                     # PHP runtime
+brew "pipx"                                    # Install Python CLI apps in isolation
+brew "python@3.14"                             # Python 3.14
+brew "rsync"                                   # Fast file sync over SSH or local
+brew "tree"                                    # Show directory structure as a tree
+brew "wget"                                    # Download files from the web
+brew "teamookla/speedtest/speedtest"           # Ookla Speedtest CLI
+brew "yakitrak/yakitrak/obsidian-cli"          # Control Obsidian from the terminal
 
 # --- GUI apps (casks) ---
-cask "1password"
-cask "1password-cli"
-cask "chatgpt"
-cask "claude"
-cask "cursor"
-cask "docker"
-cask "dropbox"
-cask "garmin-express"
-cask "google-chrome"
-cask "iterm2"
-cask "makemkv"
-cask "microsoft-teams"
-cask "obsidian"
-cask "openvpn-connect"
-cask "postman"
-cask "slack"
-cask "spotify"
-cask "synology-drive"
-cask "tailscale"
-cask "transmit"
-cask "visual-studio-code"
-cask "vlc"
-cask "steipete/tap/codexbar"
+cask "1password"                               # Password manager
+cask "1password-cli"                           # 1Password command-line tool
+cask "claude"                                  # Anthropic Claude desktop app
+cask "docker"                                  # Docker Desktop
+cask "dropbox"                                 # Cloud file sync
+cask "garmin-express"                          # Sync and update Garmin devices
+cask "google-chrome"                           # Web browser
+cask "iterm2"                                  # Terminal emulator
+cask "obsidian"                                # Note-taking and knowledge base
+cask "postman"                                 # API testing and development
+cask "slack"                                   # Team messaging
+cask "spotify"                                 # Music streaming
+cask "synology-drive"                          # Sync files with Synology NAS
+cask "tailscale"                               # VPN between your devices
+cask "transmit"                                # FTP/SFTP/S3 file transfer
+cask "visual-studio-code"                      # Code editor
 
 # --- App Store apps (requires: brew "mas") ---
-mas "1Password for Safari",          id: 1569813296
-mas "Blackmagic Disk Speed Test",    id: 425264550
-mas "Deliveries",                    id: 290986013
-mas "Double Shot",                   id: 1076145960
-mas "Evernote",                      id: 406056744
-mas "Final Cut Pro",                 id: 424389933
-mas "GoPro Player",                  id: 1460836908
-mas "GoPro Quik",                    id: 561350520
-mas "iMovie",                        id: 408981434
-mas "Keynote",                       id: 361285480
-mas "Numbers",                       id: 361304891
-mas "Pages",                         id: 361309726
-mas "reMarkable",                    id: 1276493162
-mas "Simple Refresh",                id: 1492951704
-mas "Things 3",                      id: 904280696
-mas "ViaTrumfBonusvarsler",          id: 1482280932
-mas "WhatsApp",                      id: 310633997
-mas "Wipr",                          id: 1662217862
-mas "Xcode",                         id: 497799835
+mas "1Password for Safari",          id: 1569813296  # Safari extension for 1Password
+mas "Deliveries",                    id: 290986013   # Package tracking
+mas "Double Shot",                   id: 1076145960  # Menu bar coffee/caffeine timer
+mas "Keynote",                       id: 361285480   # Presentations
+mas "Numbers",                       id: 361304891   # Spreadsheets
+mas "Pages",                         id: 361309726   # Word processor
+mas "reMarkable",                    id: 1276493162  # Companion app for reMarkable tablet
+mas "Simple Refresh",                id: 1492951704  # Auto-refresh browser tabs
+mas "Things 3",                      id: 904280696   # Task manager
+mas "ViaTrumfBonusvarsler",          id: 1482280932  # Ruter bonus notifications
+mas "Wipr",                          id: 1662217862  # Ad blocker for Safari
+mas "Xcode",                         id: 497799835   # Apple IDE (also installs dev tools)
 
 # --- Manual installs (not available via brew or App Store) ---
 # - Monitor Center
@@ -105,4 +69,4 @@ mas "Xcode",                         id: 497799835
 # - Synology Surveillance Station Client
 # - Zaptec
 
-uv "nano-pdf"
+uv "nano-pdf"                                  # PDF tools
