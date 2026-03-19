@@ -19,7 +19,7 @@ brew "mas"                                     # Mac App Store CLI (used by this
 brew "node"                                    # Node.js runtime
 brew "php"                                     # PHP runtime
 brew "pipx"                                    # Install Python CLI apps in isolation
-brew "python@3.14"                             # Python 3.14
+brew "python3"                                 # Python (latest stable)
 brew "rsync"                                   # Fast file sync over SSH or local
 brew "tree"                                    # Show directory structure as a tree
 brew "wget"                                    # Download files from the web
