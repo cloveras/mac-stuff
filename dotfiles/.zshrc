@@ -1,13 +1,18 @@
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Aliases
-alias m='less'
+# Colors
 export CLICOLOR=1
 export LSCOLORS=CxFxCxDxBxegedabagaced
+
+# Aliases
+alias m='less'
 alias ls='ls -GFC'
 alias ll='ls -Gl'
 alias la='ls -Gla'
+
+alias h='history'
+alias hh='history | grep -i'
 
 alias gs='git status'
 alias gp='git push'
@@ -26,3 +31,4 @@ parse_git_branch() {
 setopt PROMPT_SUBST
 # export PS1='%F{076}%n@%m%f:%F{076}%~%f%F{yellow}$(parse_git_branch)%f %# '
 export PS1='%F{076}%B%n%b%f%F{076}@%m%f%F{246} · %f%F{039}%~%f${$(parse_git_branch):+ }%F{yellow}$(parse_git_branch)%f %#'
+#export PS1='%F{076}%B%n%b%f%F{076}@%m%f%F{246} · %f%F{039}%~%f${$(parse_git_branch):+ }%F{yellow}$(parse_git_branch)%f %$'
