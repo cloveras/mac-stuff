@@ -129,5 +129,3 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 
 # Claude
 export PATH="$HOME/.local/bin:$PATH"
-
-alias claude-mem='/Users/cl/.bun/bin/bun "/Users/cl/.claude/plugins/cache/thedotmack/claude-mem/10.5.5/scripts/worker-service.cjs"'
