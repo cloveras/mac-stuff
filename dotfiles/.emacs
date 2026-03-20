@@ -113,6 +113,7 @@
 )))
 
 ;; Restore the "desktop" (do this as late as possible)
+(setq desktop-save t)
 (desktop-read)
 (desktop-save-mode 1)
 
