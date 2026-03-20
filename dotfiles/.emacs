@@ -48,7 +48,6 @@
 (autoload 'hippie-exp "hippie-exp" t)
 
 ;; Keys
-(global-set-key "\C-x\C-f" 'find-file)
 (global-set-key "\C-\M-f" 'find-file-at-point)
 (global-set-key "\C-cn" 'find-dired)
 (global-set-key "\C-cN" 'grep-find)
@@ -63,40 +62,20 @@
 (transient-mark-mode 1)
 (setq mark-even-if-inactive t)
 
-;; Enable full syntax highlighting
+;; Syntax highlighting
 (global-font-lock-mode 1)
 (setq font-lock-maximum-decoration t)
-(setq font-lock-support-mode 'jit-lock-mode)
-(setq jit-lock-defer-time 0.1)
 
-;; Force colors in terminal
-(setq term-default-bg-color "black")
-(setq term-default-fg-color "white")
+;; Colors
 (set-face-foreground 'default "white")
 (set-face-background 'default "black")
 
-;; Font lock mode: Bold
-(defun my-make-face (face colour &optional bold)
-  "Create a face from a colour and optionally make it bold"
-  (make-face face)
-  (copy-face 'default face)
-  (set-face-foreground face colour)
-  (if bold (make-face-bold face))
-)
-
 ;; Mode line
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(mode-line ((t (:background "white" :foreground "black" :box nil))))
  '(mode-line-inactive ((t (:background "gray90" :foreground "black" :box nil)))))
 
 ;; File modes
-
-(require 'yaml-mode)
-
 (setq auto-mode-alist
       (append
        '(("\\.awk\\'" . awk-mode)
@@ -112,7 +91,7 @@
          ("\\.emacs\\'" . emacs-lisp-mode)
          ("\\.htm\\'" . html-mode)
          ("\\.html\\'" . web-mode)
-         ("\\.json$" . js2-mode)
+         ("\\.json$" . json-mode)
          ("\\Makefile$" . makefile-mode)
          ("\\makefile$" . makefile-mode)
          ("\\.md$" . markdown-mode)
@@ -121,12 +100,10 @@
          ("\\.pl\\'" . perl-mode)
          ("\\.pp\\'" . ruby-mode)
          ("\\.properties\\'" . conf-mode)
-         ("\\.py$" . python-mode)
          ("\\.py\\'" . python-mode)
          ("\\.sed\\'" . sh-mode)
          ("\\.sh\\'" . sh-mode)
          ("\\.sql\\'" . sql-mode)
-         ("\\.text\\'" . text-mode)
          ("\\.txt\\'" . text-mode)
          ("\\.yaml\\'" . yaml-mode)
          ("\\.yml\\'" . yaml-mode)
@@ -140,9 +117,6 @@
 (desktop-save-mode 1)
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(bash-completion doom-themes yaml-mode markdown-mode json-mode)))
+   '(bash-completion doom-themes yaml-mode markdown-mode json-mode
+     web-mode js2-mode php-mode dockerfile-mode)))
