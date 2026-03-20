@@ -8,7 +8,7 @@ macOS setup for a new machine.
 |---|---|
 | `Brewfile` | All Homebrew formulae, casks, and App Store apps |
 | `npm-globals.txt` | Global npm packages |
-| `dotfiles/` | `.zshrc`, symlinked into `~/` |
+| `dotfiles/` | `.zshrc` and `.emacs`, symlinked into `~/` |
 | `ssh/id_rsa.pub` | Public SSH key (private key must be added manually) |
 | `macos-prefs.sh` | Key system preferences via `defaults write` |
 | `clone-repos.sh` | Creates `~/Dev` and clones all repos |
