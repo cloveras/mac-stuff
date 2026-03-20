@@ -1,3 +1,13 @@
+;; Package management
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(dolist (pkg '(bash-completion doom-themes yaml-mode markdown-mode json-mode))
+  (unless (package-installed-p pkg)
+    (package-install pkg)))
+
 ;; Completely disable Tree-sitter
 (setq treesit-extra-load-path nil)
 (setq major-mode-remap-alist nil)
