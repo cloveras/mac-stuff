@@ -4,7 +4,8 @@
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
-(dolist (pkg '(bash-completion doom-themes yaml-mode markdown-mode json-mode))
+(dolist (pkg '(bash-completion doom-themes yaml-mode markdown-mode json-mode
+               web-mode js2-mode php-mode dockerfile-mode))
   (unless (package-installed-p pkg)
     (package-install pkg)))
 
