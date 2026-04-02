@@ -8,7 +8,7 @@ macOS setup for a new machine.
 |---|---|
 | `Brewfile` | All Homebrew formulae, casks, and App Store apps |
 | `npm-globals.txt` | Global npm packages |
-| `dotfiles/` | `.zshrc` and `.emacs`, symlinked into `~/` |
+| `dotfiles/` | `.zshrc`, `.emacs`, and Claude settings (`.claude/`), symlinked into `~/` |
 | `ssh/id_rsa.pub` | Public SSH key (private key must be added manually) |
 | `macos-prefs.sh` | Key system preferences via `defaults write` |
 | `clone-repos.sh` | Creates `~/Dev` and clones all repos |
@@ -47,7 +47,7 @@ This will:
 - Install all brew packages, casks, and App Store apps from `Brewfile`
 - Install global npm packages
 - Create `~/Dev` and clone all repos
-- Symlink dotfiles (`.zshrc`) into `~/` and set zsh as default shell
+- Symlink dotfiles (`.zshrc`, Claude settings) into `~/` and set zsh as default shell
 - Copy the public SSH key to `~/.ssh/`
 - Apply macOS system preferences
 

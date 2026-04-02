@@ -19,6 +19,11 @@ echo "Symlinking dotfiles..."
 link .zshrc
 link .emacs
 
+echo "Symlinking Claude settings..."
+mkdir -p ~/.claude
+link .claude/CLAUDE.md
+link .claude/settings.json
+
 echo "Copying SSH public key..."
 mkdir -p ~/.ssh
 chmod 700 ~/.ssh
