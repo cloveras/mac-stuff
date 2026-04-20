@@ -37,11 +37,17 @@ Copy `id_rsa` from your old machine or 1Password to `~/.ssh/id_rsa`, then:
 chmod 600 ~/.ssh/id_rsa
 ```
 
-**4. Set up Synology Drive**
+**4. Configure git identity**
+```bash
+git config --global user.name "Christian Løverås"
+git config --global user.email "cl@superelectric.net"
+```
+
+**5. Set up Synology Drive**
 
 Install Synology Drive Client and sync `~/SynologyDrive/`. The Claude context files live at `~/SynologyDrive/Claude/` — `symlink.sh` will link `~/.claude/CLAUDE.md` to that file automatically. If Synology Drive isn't set up yet, the symlink step will warn you and you can re-run `symlink.sh` afterwards.
 
-**5. Run the install script**
+**6. Run the install script**
 ```bash
 bash install.sh
 ```
@@ -56,7 +62,7 @@ This will:
 - Copy the public SSH key to `~/.ssh/`
 - Apply macOS system preferences
 
-**6. Install Claude Code slash commands**
+**7. Install Claude Code slash commands**
 
 ```bash
 curl -sO --output-dir ~/.claude/commands \
@@ -66,15 +72,15 @@ curl -sO --output-dir ~/.claude/commands \
 
 See [claude-stuff](https://github.com/cloveras/claude-stuff) for details.
 
-**7. Set up Cowork**
+**8. Set up Cowork**
 
 Open the Cowork desktop app and connect `~/SynologyDrive/Claude/` as your workspace folder. This gives Cowork access to your `CLAUDE.md` and `memory/` files automatically.
 
-**8. Import iTerm2 settings**
+**9. Import iTerm2 settings**
 
 Open iTerm2, then go to **General → Preferences → Load preferences from a custom folder or URL**, point it at this repo, or use **File → Import AI Config / Restore State** and select `iTerm2 State.itermexport`.
 
-**9. Restart**
+**10. Restart**
 
 Some preferences (trackpad, UI) require a restart to fully apply.
 
