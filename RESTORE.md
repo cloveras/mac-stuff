@@ -59,6 +59,10 @@ symlinks dotfiles, applies macOS preferences, sets zsh as the shell.
 
 ## 5. Restore the encrypted secrets
 
+> `install.sh` (step 4) already offers to do this for you, before cloning repos
+> so SSH keys are ready for private clones. The manual steps below are the
+> fallback if you skipped that prompt or the drive wasn't mounted yet.
+
 Mount the image (Finder double-click works too - enter the passphrase):
 ```bash
 hdiutil attach /Volumes/CL256GB/mac-backup/latest/secrets.sparseimage
