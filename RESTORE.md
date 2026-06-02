@@ -6,12 +6,17 @@ can't hold. Use it to bring a new or wiped Mac back fast.
 
 ```
 mac-backup/
-├── RESTORE.md              ← you are here
-├── repo/                   ← plaintext copy of mac-stuff (Brewfile, dotfiles, scripts…)
-└── secrets.sparseimage     ← AES-256 encrypted: SSH keys, git/cloud/AI credentials
+├── RESTORE.md                      ← you are here
+├── latest -> snapshots/<newest>    ← always points at the most recent backup
+└── snapshots/
+    └── <YYYY-MM-DD-HHMMSS>/        ← 3 most recent kept
+        ├── repo/                   ← plaintext copy of mac-stuff
+        └── secrets.sparseimage     ← AES-256 encrypted: SSH/git/cloud/AI creds
 ```
 
-The passphrase for `secrets.sparseimage` is in **1Password** (item: "mac-secrets USB").
+Restore from **`latest/`** (newest backup). Older generations under `snapshots/`
+exist as fallbacks if the newest is bad. The passphrase for
+`secrets.sparseimage` is in **1Password** (item: "mac-secrets USB").
 Lose it and the secrets are unrecoverable - that is by design.
 
 ---
@@ -25,7 +30,7 @@ Plug in the USB. On a fresh Mac the terminal can't read removable volumes yet:
 
 Verify:
 ```bash
-ls /Volumes/CL256GB/mac-backup && echo OK
+ls /Volumes/CL256GB/mac-backup/latest && echo OK
 ```
 
 ## 2. Install Xcode Command Line Tools (git, etc.)
@@ -39,7 +44,7 @@ Wait for it to finish.
 
 ```bash
 mkdir -p ~/Dev
-cp -R /Volumes/CL256GB/mac-backup/repo ~/Dev/mac-stuff
+cp -R /Volumes/CL256GB/mac-backup/latest/repo ~/Dev/mac-stuff
 cd ~/Dev/mac-stuff
 ```
 
@@ -56,7 +61,7 @@ symlinks dotfiles, applies macOS preferences, sets zsh as the shell.
 
 Mount the image (Finder double-click works too - enter the passphrase):
 ```bash
-hdiutil attach /Volumes/CL256GB/mac-backup/secrets.sparseimage
+hdiutil attach /Volumes/CL256GB/mac-backup/latest/secrets.sparseimage
 ```
 It mounts at `/Volumes/mac-secrets`. Copy each category back:
 
@@ -109,6 +114,8 @@ On the working Mac, re-run the backup anytime:
 ```bash
 cd ~/Dev/mac-stuff && bash backup-to-usb.sh
 ```
-It refreshes the Brewfile, npm globals, and public key, re-mirrors the repo,
-and updates the encrypted secrets image. Do this after big config changes
-(new SSH key, new cloud login, fresh app installs). Monthly is a sane cadence.
+Each run writes a new timestamped snapshot under `snapshots/` and keeps the
+**3 most recent**, pruning older ones automatically. It refreshes the Brewfile,
+npm globals, and public key, re-mirrors the repo, and clones+updates the
+encrypted secrets image. Do this after big config changes (new SSH key, new
+cloud login, fresh app installs). Monthly is a sane cadence.

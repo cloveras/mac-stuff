@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
 # Backup Mac settings + secrets to a USB drive for fast disaster recovery.
 #
-# Writes an offline twin of this repo to the USB:
-#   <USB>/mac-backup/repo/            full copy of mac-stuff (plaintext, browsable)
-#   <USB>/mac-backup/secrets.sparseimage   AES-256 encrypted private keys/creds
-#   <USB>/mac-backup/RESTORE.md       step-by-step rebuild guide
+# Each run creates a timestamped snapshot and keeps the 3 most recent:
+#   <USB>/mac-backup/
+#   ├── RESTORE.md                       rebuild guide (plaintext)
+#   ├── latest -> snapshots/<newest>     convenience symlink
+#   └── snapshots/
+#       └── <YYYY-MM-DD-HHMMSS>/
+#           ├── repo/                    plaintext copy of mac-stuff
+#           └── secrets.sparseimage      AES-256 encrypted keys/creds
 #
-# Idempotent. Safe to re-run weekly. Refreshes Brewfile / npm globals / public
-# key from the live machine, then rsyncs everything to the drive.
+# Retention: after writing the new snapshot, the oldest is pruned so exactly
+# 3 generations remain (the two previous + the one just made).
 #
-# Requires: terminal app granted Full Disk Access (or Removable Volumes) in
-# System Settings -> Privacy & Security, otherwise the drive is unreadable.
+# Idempotent. Refreshes Brewfile / npm globals / public key from the live
+# machine each run. Requires the terminal app to have Full Disk Access (or
+# Removable Volumes) in System Settings -> Privacy & Security.
 
 set -euo pipefail
 
@@ -19,15 +24,20 @@ set -euo pipefail
 # =============================================================================
 USB_VOL="/Volumes/CL256GB"
 DEST="$USB_VOL/mac-backup"
+SNAP_ROOT="$DEST/snapshots"
 REPO="$(cd "$(dirname "$0")" && pwd)"
-SPARSE="$DEST/secrets.sparseimage"
 VOLNAME="mac-secrets"
 SIZE="2g"                 # sparse: grows on demand up to this cap
+KEEP=3                    # snapshots to retain
+
+STAMP="$(date +%Y-%m-%d-%H%M%S)"   # Oslo local time; sorts chronologically
+SNAP="$SNAP_ROOT/$STAMP"
+SPARSE="$SNAP/secrets.sparseimage"
 
 # =============================================================================
 # Preflight
 # =============================================================================
-echo "=== Mac backup to USB ==="
+echo "=== Mac backup to USB ($STAMP) ==="
 
 if [ ! -d "$USB_VOL" ]; then
   echo "ERROR: $USB_VOL not mounted. Plug in the drive and retry." >&2
@@ -45,8 +55,15 @@ if ! touch "$USB_VOL/.cl-write-test" 2>/dev/null; then
 fi
 rm -f "$USB_VOL/.cl-write-test"
 
-mkdir -p "$DEST"
 command -v rsync >/dev/null || { echo "ERROR: rsync not found." >&2; exit 1; }
+
+# Newest existing snapshot (the one we clone the secrets image from), if any.
+PREV=""
+if [ -d "$SNAP_ROOT" ]; then
+  PREV="$(ls -1d "$SNAP_ROOT"/*/ 2>/dev/null | sort | tail -1 || true)"
+  PREV="${PREV%/}"
+fi
+mkdir -p "$SNAP"
 
 # =============================================================================
 # Refresh volatile repo content from the live machine
@@ -67,17 +84,21 @@ fi
 # current — no copy-back needed (that would be circular).
 
 # =============================================================================
-# Mirror repo to USB (plaintext, browsable)
+# Mirror repo into the new snapshot (plaintext, browsable)
 # =============================================================================
-echo "Syncing repo -> $DEST/repo/ ..."
-rsync -a --delete --exclude='.DS_Store' "$REPO/" "$DEST/repo/"
+echo "Syncing repo -> $SNAP/repo/ ..."
+rsync -a --delete --exclude='.DS_Store' "$REPO/" "$SNAP/repo/"
 
 # =============================================================================
-# Encrypted secrets image
+# Encrypted secrets image (clone prior, else create)
 # =============================================================================
 read -r -s -p "Passphrase for encrypted secrets image: " PASS; echo
-if [ ! -f "$SPARSE" ]; then
-  read -r -s -p "Confirm passphrase (new image): " PASS2; echo
+
+if [ -n "$PREV" ] && [ -f "$PREV/secrets.sparseimage" ]; then
+  echo "Cloning previous secrets image (APFS copy-on-write)..."
+  cp -c "$PREV/secrets.sparseimage" "$SPARSE"
+else
+  read -r -s -p "Confirm passphrase (first image): " PASS2; echo
   [ "$PASS" = "$PASS2" ] || { echo "ERROR: passphrases differ." >&2; exit 1; }
   echo "Creating encrypted image ($SIZE cap, AES-256)..."
   printf '%s' "$PASS" | hdiutil create -size "$SIZE" -type SPARSE -fs APFS \
@@ -138,19 +159,34 @@ trap - EXIT
 echo "Secrets image unmounted."
 
 # =============================================================================
-# Regenerate RESTORE.md
+# RESTORE.md + latest symlink
 # =============================================================================
-echo "Writing RESTORE.md..."
+echo "Writing RESTORE.md and latest -> $STAMP ..."
 cp "$REPO/RESTORE.md" "$DEST/RESTORE.md"
+ln -sfn "snapshots/$STAMP" "$DEST/latest"
+
+# =============================================================================
+# Prune: keep the KEEP newest snapshots, delete older
+# =============================================================================
+n=$(ls -1d "$SNAP_ROOT"/*/ 2>/dev/null | wc -l | tr -d ' ')
+if [ "$n" -gt "$KEEP" ]; then
+  echo "Pruning $((n - KEEP)) old snapshot(s) (keeping $KEEP)..."
+  ls -1d "$SNAP_ROOT"/*/ | sort | head -n "$((n - KEEP))" | while IFS= read -r d; do
+    rm -rf "$d"
+    echo "  pruned $(basename "${d%/}")"
+  done
+fi
 
 # =============================================================================
 # Summary
 # =============================================================================
 echo ""
 echo "=== Done ==="
-echo "Repo mirror : $(du -sh "$DEST/repo" 2>/dev/null | cut -f1)"
-echo "Secrets img : $(du -sh "$SPARSE" 2>/dev/null | cut -f1)"
-echo "Location    : $DEST"
+echo "New snapshot : $SNAP"
+echo "  repo       : $(du -sh "$SNAP/repo" 2>/dev/null | cut -f1)"
+echo "  secrets    : $(du -sh "$SPARSE" 2>/dev/null | cut -f1)"
+echo "Retained     :"
+ls -1d "$SNAP_ROOT"/*/ 2>/dev/null | sort | while IFS= read -r d; do echo "  $(basename "${d%/}")"; done
 echo ""
 echo "WARNING: tokens hard-coded in ~/.zshrc are NOT in the encrypted image —"
 echo "  .zshrc is a tracked dotfile and lives plaintext in repo/. Keep real"
