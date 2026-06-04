@@ -44,7 +44,3 @@ export PS1='%F{076}%B%n%b%f%F{076}@%m%f%F{246} · %f%F{039}%~%f${$(parse_git_bra
 export PATH="$(go env GOPATH)/bin:$PATH"
 export APOLLO_ELV2_LICENSE=accept
 eval "$(direnv hook zsh)"
-
-# GitHub MCP server (claude-plugins-official) reads this for its Bearer header.
-# Resolved live from the gh CLI keyring, so no token is written to disk.
-export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
