@@ -23,6 +23,8 @@ alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 # Claude CLI
 export PATH="$HOME/.local/bin:$PATH"
+# Go
+export PATH="/usr/local/go/bin:$PATH"
 
 # Prompt configuration
 # parse_git_branch: returns " [branch-name]" if inside a git repo, empty otherwise
@@ -37,3 +39,12 @@ setopt PROMPT_SUBST
 #   - Yellow git branch in brackets (only shown inside a git repo)
 #   - %(#.#.$): shows # when running as root/sudo, $ for normal user
 export PS1='%F{076}%B%n%b%f%F{076}@%m%f%F{246} · %f%F{039}%~%f${$(parse_git_branch):+ }%F{yellow}$(parse_git_branch)%f %(#.#.$)'
+
+# Placepoint dev env
+export PATH="$(go env GOPATH)/bin:$PATH"
+export APOLLO_ELV2_LICENSE=accept
+eval "$(direnv hook zsh)"
+
+# GitHub MCP server (claude-plugins-official) reads this for its Bearer header.
+# Resolved live from the gh CLI keyring, so no token is written to disk.
+export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
