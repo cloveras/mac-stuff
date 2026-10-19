@@ -45,7 +45,7 @@ git config --global user.email "cl@superelectric.net"
 
 **5. Set up Synology Drive**
 
-Install Synology Drive Client and sync `~/SynologyDrive/`. The Claude context files live at `~/SynologyDrive/Claude/` — `symlink.sh` will link `~/.claude/CLAUDE.md` to that file automatically. If Synology Drive isn't set up yet, the symlink step will warn you and you can re-run `symlink.sh` afterwards.
+Install Synology Drive Client and sync `~/SynologyDrive/`. The Claude context files live at `~/SynologyDrive/Claude/` - `symlink.sh` will link `~/.claude/CLAUDE.md` to that file automatically. If Synology Drive isn't set up yet, the symlink step will warn you and you can re-run `symlink.sh` afterwards.
 
 **6. Run the install script**
 ```bash
@@ -97,7 +97,43 @@ Claude context is split across two places:
 | Slash commands | `~/.claude/commands/` (from `claude-stuff`) | Reusable Claude Code workflows like `/prd-create` |
 | Claude Code settings | `dotfiles/.claude/settings.json` | Symlinked to `~/.claude/settings.json` |
 
-`~/.claude/CLAUDE.md` is a symlink to `~/SynologyDrive/Claude/CLAUDE.md`. Edit the Synology file — both tools pick up the change automatically, and Synology Drive keeps it synced across machines.
+`~/.claude/CLAUDE.md` is a symlink to `~/SynologyDrive/Claude/CLAUDE.md`. Edit the Synology file - both tools pick up the change automatically, and Synology Drive keeps it synced across machines.
+
+---
+
+## Tailscale alongside Azure VPN
+
+Tailscale and Azure VPN Client run fine at the same time: Tailscale routes `100.64.0.0/10`, the Azure point-to-site profile routes its VNet range, and they don't overlap. Only DNS collides.
+
+**The problem:** with "Use Tailscale DNS" on, the Tailscale app makes `100.100.100.100` the default resolver and forwards everything outside the tailnet to the LAN's DNS (1.1.1.1 etc.), bypassing the DNS server the Azure VPN pushes. Azure private endpoints (`*.database.windows.net`, `*.blob.core.windows.net`, ...) then resolve to their public IPs instead of the private 10.x addresses.
+
+**The fix:** turn Tailscale DNS off, and send only the tailnet domain to Tailscale's resolver with a macOS per-domain resolver file. Everything else keeps using the Azure DNS while the VPN is up.
+
+1. Install Tailscale (`cask "tailscale"` in the Brewfile) and log in. The `tailscale` CLI alias is in `dotfiles/.zshrc`.
+
+2. Turn off Tailscale DNS (or untick **Use Tailscale DNS** in the menu bar app):
+   ```bash
+   tailscale set --accept-dns=false
+   ```
+
+3. Point the tailnet domain at Tailscale's resolver. The `search` line makes bare names like `ssh uranus` work:
+   ```bash
+   TAILNET=$(tailscale status --json | python3 -c 'import json,sys; print(json.load(sys.stdin)["MagicDNSSuffix"])')
+   sudo mkdir -p /etc/resolver
+   printf 'nameserver 100.100.100.100\nsearch %s\n' "$TAILNET" | sudo tee "/etc/resolver/$TAILNET"
+   ```
+
+4. Check, with the Azure VPN connected:
+   ```bash
+   dscacheutil -q host -a name <host>.$TAILNET                  # 100.x address
+   dscacheutil -q host -a name <host>                           # same, via the search line
+   dscacheutil -q host -a name <server>.database.windows.net    # private 10.x address, not public
+   ```
+   Use `dscacheutil`, `ping` or `ssh` to test. `dig` and `nslookup` read `/etc/resolv.conf` directly and ignore `/etc/resolver/`.
+
+Don't solve this with Split DNS in the Tailscale admin console: it applies to every device in the tailnet, and the ones without the Azure VPN would lose `*.windows.net` lookups.
+
+To undo: `sudo rm "/etc/resolver/$TAILNET"` and `tailscale set --accept-dns=true`.
 
 ---
 
