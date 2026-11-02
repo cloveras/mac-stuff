@@ -15,6 +15,7 @@ macOS setup for a new machine.
 | `symlink.sh` | Symlinks dotfiles into `~/` |
 | `install.sh` | Runs everything in order |
 | `iTerm2 State.itermexport` | iTerm2 profile and settings export |
+| `notes/` | Troubleshooting notes, such as the work Mac's monitor panics |
 
 ## Setup on a new Mac
 
